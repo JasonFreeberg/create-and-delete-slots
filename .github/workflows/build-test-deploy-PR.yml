@@ -1,0 +1,54 @@
+name: "Build and test the PR. Deploy it to a staging site."
+
+on:
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v1
+
+    - name: Log into Azure CLI with service principal
+      uses: azure/login@v1.1
+      with:
+        creds: ${{ secrets.WEB_APP_SP }}
+  
+    - name: Set up Ruby 2.6
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.6.x
+        
+    - name: Build and test the appliaction
+      run: bundle exec jekyll build --future --baseurl=''
+      env:
+        JEKYLL_ENV: production
+
+    - name: Create slot on staging site
+      run: az webapp deployment slot create --resource-group appserviceblogsite  --name antares-blog-staging --slot pr-${{ github.event.number }}
+
+    - name: Deploy to slot on staging site
+      uses: azure/webapps-deploy@v1
+      with: 
+        app-name: antares-blog-staging
+        slot-name:  "pr-${{ github.event.number }}"
+        package: _site/
+    
+    - name: Comment on PR with the preview link
+      uses: mshick/add-pr-comment@master
+      with:
+        message: |
+          ## [Preview link](https://antares-blog-staging-pr-${{ github.event.number }}.azurewebsites.net)
+          
+          - Your changes have been deployed to the preview site. The preview site will update as you add more commits to this branch. 
+          - The preview site shows any future-dated articles. Don't worry, if you are publishing a future-dated article, it will not show on the production site until the file's specified date.
+          - The preview link is shareable, but will be deleted when the pull request is merged or closed.
+          
+          > *This is an automated message.*
+        repo-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+ 
