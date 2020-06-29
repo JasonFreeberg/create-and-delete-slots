@@ -4,11 +4,11 @@ App Service allows you to create [indpendent environments](https://docs.microsof
 
 This repository contains two workflow files. One will create a deployment slot on your App Service for each pull request, and deploy the PR branch to it. The second workflow will delete the slot when the PR is closed or merged. The workflow that builds and deploys the app references NPM and Node.js, but you can easily replace those usages with your framework's build tool and SDK.
 
-  - Node.js
-  - Java
-  - .NET
-  - Ruby
-  - Python
+  - [Node.js](https://github.com/actions/setup-node)
+  - [Java](https://github.com/actions/setup-java)
+  - [.NET](https://github.com/actions/setup-python)
+  - [Ruby](https://github.com/actions/setup-ruby)
+  - [Python](https://github.com/actions/setup-python)
 
 ## More resources
 
