@@ -23,11 +23,6 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.6.x
-        
-    - name: Build and test the appliaction
-      run: bundle exec jekyll build --future --baseurl=''
-      env:
-        JEKYLL_ENV: production
 
     - name: Create slot on staging site
       run: az webapp deployment slot create --resource-group appserviceblogsite  --name antares-blog-staging --slot pr-${{ github.event.number }}
