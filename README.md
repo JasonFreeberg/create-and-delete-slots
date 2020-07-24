@@ -16,6 +16,8 @@ Both workflows will require you to create an Azure Service Principal and [save i
                           --sdk-auth
 ```
 
+> [More information on creating the service principal](https://github.com/Azure/login#configure-deployment-credentials).
+
 ## "setup" actions for common languages
 
 Replace the `actions/setup-java` action with the action for your app's language.
@@ -25,8 +27,6 @@ Replace the `actions/setup-java` action with the action for your app's language.
   - [.NET](https://github.com/actions/setup-python)
   - [Ruby](https://github.com/actions/setup-ruby)
   - [Python](https://github.com/actions/setup-python)
-
-> [More information on creating the service principal](https://github.com/Azure/login#configure-deployment-credentials).
 
 ## More resources
 
