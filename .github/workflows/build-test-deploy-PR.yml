@@ -19,31 +19,34 @@ jobs:
       with:
         creds: ${{ secrets.WEB_APP_SP }}
   
-    - name: Set up Ruby 2.6
-      uses: actions/setup-ruby@v1
+    - name: Set the Java version
+      uses: actions/setup-java@v1
       with:
-        ruby-version: 2.6.x
+        java-version: '9.0.4'
+        
+    - name: Build and test the app
+      run: mvn clean package
 
     - name: Create slot on staging site
-      run: az webapp deployment slot create --resource-group appserviceblogsite  --name antares-blog-staging --slot pr-${{ github.event.number }}
+      run: az webapp deployment slot create --resource-group appserviceblogsite --name my-app-name --slot pr-${{ github.event.number }}
 
     - name: Deploy to slot on staging site
       uses: azure/webapps-deploy@v1
       with: 
-        app-name: antares-blog-staging
+        app-name: my-app-name
         slot-name:  "pr-${{ github.event.number }}"
-        package: _site/
+        package: .
     
     - name: Comment on PR with the preview link
       uses: mshick/add-pr-comment@master
       with:
         message: |
-          ## [Preview link](https://antares-blog-staging-pr-${{ github.event.number }}.azurewebsites.net)
+          ## [Preview link](https://my-app-name-pr-${{ github.event.number }}.azurewebsites.net)
           
           - Your changes have been deployed to the preview site. The preview site will update as you add more commits to this branch. 
           - The preview site shows any future-dated articles. Don't worry, if you are publishing a future-dated article, it will not show on the production site until the file's specified date.
           - The preview link is shareable, but will be deleted when the pull request is merged or closed.
           
           > *This is an automated message.*
-        repo-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
  
